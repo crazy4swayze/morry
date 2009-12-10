@@ -1,0 +1,6 @@
+#!/home/associat/g/goldfish/local/bin/perl
+use strict;
+use lib qw(lib);
+use Morry;
+
+Morry->run;
