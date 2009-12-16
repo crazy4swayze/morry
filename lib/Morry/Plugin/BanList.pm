@@ -9,7 +9,7 @@ use namespace::autoclean;
 sub S_bot_addressed {
     my ($self, $irc, $nickstr, $channels, $message) = @_;
 
-    return PCI_EAT_NONE unless $$message =~ /^(load|save)_bans$/;
+    return PCI_EAT_NONE unless $$message =~ /^(load|save)bans$/;
     return PCI_EAT_PLUGIN unless $$nickstr eq $self->bot->default_owner; 
     
     my $channel = $$channels->[0] || '';
@@ -18,7 +18,7 @@ sub S_bot_addressed {
     my $banfile = 
         '/home/associat/g/goldfish/.morry/bans-' . $channel . '.yml';
  
-    if ($$message =~ /save/) {
+    if ($$message =~ /^save$/) {
         my $ban_ref = $self->bot->irc->channel_ban_list($channel);
         return PCI_EAT_PLUGIN unless $ban_ref;
 

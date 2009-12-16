@@ -7,6 +7,7 @@ use POE::Component::Client::HTTP;
 use POE::Component::IRC::Plugin qw(:ALL);
 use URI::Find;
 use HTTP::Request;
+use Data::Dumper;
 use vars qw($VERSION);
 
 $VERSION = '1.08';
@@ -82,10 +83,8 @@ sub _uri_found {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   my ($irc,$who,$channel,$what) = @{ $_[ARG0] };
   my ($uriurl,$url) = @{ $_[ARG1] };
-# ignore any tinyurl links
-  return if $url =~ /tinyurl\.com/;
 # ignore short urls
-  return unless length $url gt 40;
+  return unless length $url > 60;
   $kernel->call( $self->{session_id}, '_get_headline', { url => $url, _channel => $channel });
 
   undef;
@@ -115,8 +114,10 @@ sub _response {
   if ( $result->is_success ) {
       my $tinyurl = $result->content;
       push @params, 'irc_url_tiny', $args, $tinyurl;
-      $kernel->post( @params );
+  } else {
+        push @params, 'irc_url_tiny_error', $args, $result->status_line;
   }
+      $kernel->post( @params );
 }
 
 1;

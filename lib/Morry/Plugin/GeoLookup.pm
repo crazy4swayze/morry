@@ -44,7 +44,7 @@ sub S_bot_addressed {
     return PCI_EAT_NONE unless $$message =~ /^$RE{net}{IPv4}$/;
 
     my $channel = $$channels->[0] || '';
-    my $result = $self->lookup($$message);
+    my $result = $$message eq '127.0.0.1' ? 'Your ma is a geebag.' : $self->lookup($$message);
     $self->privmsg($channel => $result);
     return PCI_EAT_PLUGIN;
 }
